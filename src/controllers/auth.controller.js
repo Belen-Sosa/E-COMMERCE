@@ -34,7 +34,7 @@ export const register = async (req, res) => {
       updateAt: userSaved.updatedAt,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({message: error.message});
   }
 };
 
