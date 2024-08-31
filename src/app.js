@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 
 //importando rutas
 import authRoutes from './routes/auth.routes.js'
+import categoryRoutes from './routes/categories.routes.js'
 
 
 
@@ -21,4 +22,5 @@ app.use(cookieParser());
 
 //usando las rutas
 app.use("/api",authRoutes);
+app.use("/api",categoryRoutes);
 export default app;
