@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 
 export const register = async (req, res) => {
-  const { email, password, username } = req.body;
+  const { email, password, username ,address} = req.body;
  
 
   try {
@@ -17,6 +17,9 @@ export const register = async (req, res) => {
       username,
       email,
       password: passwordHash,
+      role: 'customer',
+      addresses: [address]
+
     });
 
     //guardar nuevo usuario
@@ -33,6 +36,7 @@ export const register = async (req, res) => {
       id: userSaved._id,
       username: userSaved.username,
       email: userSaved.email,
+      addresses: userSaved.addresses,
       createdAt: userSaved.createdAt,
       updateAt: userSaved.updatedAt,
     });
@@ -91,6 +95,21 @@ export const logout = (req,res)=>{
 }
 
 
-export const profile = (req, res)=>{
-    res.send('profile')
+export const profile = async (req, res)=>{
+
+  const userFound= await  User.findById(req.user.id);
+
+  if(!userFound){
+    return res.status(400).json({message: "Usuario no encontrado"});
+
+  }
+
+  return res.json({
+    id: userFound._id,
+    username: userFound.username,
+    email: userFound.email,
+    createdAt: userFound.createdAt,
+    updateAt: userFound.updateAt,
+  })
+     
 }
