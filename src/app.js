@@ -9,6 +9,7 @@ import productRoutes from './routes/products.routes.js'
 import orderRoutes from './routes/order.routes.js'
 import paymentRoutes from './routes/payments.routes.js'
 import cartRoutes from './routes/cart.routes.js'
+import reviewRoutes from './routes/reviews.routes.js'
 const app = express()
 
 
@@ -28,4 +29,5 @@ app.use("/api",productRoutes);
 app.use("/api",orderRoutes);
 app.use("/api",paymentRoutes);
 app.use("/api",cartRoutes);
+app.use("/api",reviewRoutes);
 export default app;
