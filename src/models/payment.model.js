@@ -17,12 +17,13 @@ const paymentSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
+    enum: ['credito', 'debito', 'efectivo'],
     required: true
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'paid', 'failed'],
-    default: 'pending'
+    enum: ['pendiente', 'pagado', 'rechazado'],
+    default: 'pending',
   }
 }, {
   timestamps: true
