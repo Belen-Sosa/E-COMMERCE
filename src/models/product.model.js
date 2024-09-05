@@ -16,7 +16,8 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
+    ref: 'Category',
+    required: true
   },
   stock: {
     type: Number,
@@ -24,17 +25,7 @@ const productSchema = new mongoose.Schema({
     default: 0
   },
   images: [String],
-  reviews: [
-    {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      },
-      rating: Number,
-      comment: String,
-      createdAt: Date
-    }
-  ]
+  
 }, {
   timestamps: true
 });

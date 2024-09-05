@@ -41,8 +41,8 @@ export const registerSchema = z.object({
     .string({
       required_error: "La contraseña es requerida.",
     })
-    .min(6, {
-      message: "La contraseña debe contener más de 6 caracteres.",
+    .min(5, {
+      message: "La contraseña debe contener más de 5 caracteres.",
     }),
   addresses: z.array(addressSchema).optional(),
 });

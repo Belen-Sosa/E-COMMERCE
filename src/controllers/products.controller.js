@@ -1,4 +1,5 @@
 import Product from '../models/product.model.js'
+import Category from '../models/category.model.js'
 
 export const getProducts = async ( req, res)=> {
 
@@ -6,19 +7,37 @@ export const getProducts = async ( req, res)=> {
     res.json(products);
 }
 
-//tarea
-export const createProduct = async ( req, res)=> {
-    const {name, description}= req.body;
 
-    const newCategory = new Category({
+export const createProduct = async (req, res) => {
+    try {
+        
+      const { name, description, price, category, stock, images } = req.body;
+  
+      // Verificar que la categoría exista
+      const categoryExists = await Category.findById(category);
+      if (!categoryExists) {
+        return res.status(400).json({ message: "La categoría no existe." });
+      }
+  
+      // Crear un nuevo producto
+      const newProduct = new Product({
         name,
-        description
-    });
-
-    const savedCategory=  await newCategory.save();
-    res.json(savedCategory);
-
-}
+        description,
+        price,
+        category,
+        stock: stock || 0,  // Si no se proporciona stock, el valor por defecto será 0
+        images: images || [] // Si no se proporcionan imágenes, el valor será un array vacío
+      });
+  
+      // Guardar el producto en la base de datos
+      const savedProduct = await newProduct.save();
+  
+      // Responder con el producto guardado
+      res.json(savedProduct);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
 
 export const getProduct = async ( req, res)=> {
 

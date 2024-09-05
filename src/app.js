@@ -5,7 +5,8 @@ import cookieParser from 'cookie-parser';
 //importando rutas
 import authRoutes from './routes/auth.routes.js'
 import categoryRoutes from './routes/categories.routes.js'
-
+import productRoutes from './routes/products.routes.js'
+import orderRoutes from './routes/order.routes.js'
 
 
 const app = express()
@@ -23,4 +24,6 @@ app.use(cookieParser());
 //usando las rutas
 app.use("/api",authRoutes);
 app.use("/api",categoryRoutes);
+app.use("/api",productRoutes);
+app.use("/api",orderRoutes);
 export default app;
