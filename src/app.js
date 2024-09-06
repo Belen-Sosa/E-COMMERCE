@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from "morgan";
 import cookieParser from 'cookie-parser';
+import cors from 'cors'
 
 //importando rutas
 import authRoutes from './routes/auth.routes.js'
@@ -20,7 +21,11 @@ app.use(express.json());
 //este middleware nos permite convertir las cookies a un objeto json
 app.use(cookieParser());
 
-
+//esto permite que el front con otro dominio pueda acceder al backend 
+app.use(cors({
+    origin: 'http://localhost:5173'
+}
+));
 
 //usando las rutas
 app.use("/api",authRoutes);
