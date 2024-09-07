@@ -8,6 +8,10 @@ export const register = async (req, res) => {
  
 
   try {
+    //hacemos la validacion de el usuario primero
+
+    const userFound= await User.findOne({email});
+    if(userFound) return res.status(400).json( ["El correo ya existe."])
 
      //encriptando contraseña
 

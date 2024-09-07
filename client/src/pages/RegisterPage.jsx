@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 function RegisterPage(){
 
-    const {register,handleSubmit}= useForm();
+    const {register,handleSubmit, formState: {errors}}= useForm();
+    const {signup,isAuthenticated,errors:RegisterErrors} = useAuth();
+    const navigate = useNavigate()
+
+    useEffect(()=>{
+        if(isAuthenticated) navigate("/")
+    },[isAuthenticated])
+
     const onSubmit=   handleSubmit(async (values)=>{
+        signup(values);
     
     })
 
@@ -16,6 +25,13 @@ function RegisterPage(){
     
 
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {
+            RegisterErrors.map((error,i)=>{
+                <div className="bg-red-500 p-2 text-white">
+                    {error}
+                </div>
+            })
+        }
         <form onSubmit={onSubmit} className="space-y-6">
         <div>
             <label htmlFor="usuario" className="block text-sm font-medium leading-6 text-gray-900">
@@ -26,6 +42,7 @@ function RegisterPage(){
                 type="text" {...register("username",{required:true})} 
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
+            {errors.username && <p className="text-red-500">Debe ingresar un nombre de usuario </p>}
             </div>
         </div>
         <div>
@@ -37,6 +54,7 @@ function RegisterPage(){
                 type="email" {...register("email",{required:true})} 
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
+                {errors.email && <p className="text-red-500">Debe ingresar un correo electronico </p>}
             </div>
         </div>
 
@@ -58,6 +76,7 @@ function RegisterPage(){
                 {...register("password",{required:true})} 
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
+              {errors.email && <p className="text-red-500">Debe ingresar una contraseña </p>}
             </div>
         </div>
 
