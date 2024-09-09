@@ -1,5 +1,5 @@
 import { createContext, useState, useContext } from "react";
-import { registerRequest } from "../api/auth";
+import { registerRequest,loginRequest } from "../api/auth";
 
 //creamos un contexto
 export const AuthContext = createContext();
@@ -26,16 +26,28 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (error) {
-      console.log(error.response)
+      console.log(error.response.data)
       setErrors(error.response.data);
     }
   };
+
+  const signin = async (user)=>{
+    try {
+      const res = await loginRequest(user);
+      console.log(res);
+    } catch (error) {
+      console.log(error.response.data)
+      setErrors(error.response.data);
+      
+    }
+  }
 
   return (
     //con esto proveemos a todos los hijos que se desplegan por dentro, de la informacion que esta en value
     <AuthContext.Provider
       value={{
         signup,
+        signin,
         user,
         isAuthenticated,
         errors,
