@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 function LoginPage() {
   const {
     register,
@@ -83,6 +84,9 @@ function LoginPage() {
               </button>
             </div>
           </form>
+          <p className="felx gap-x-2 justify-between">
+            ¿No tienes una cuenta aun? <Link  className="text-sky-500" to="/register">Registrate</Link>
+          </p>
         </div>
       </div>
     </>

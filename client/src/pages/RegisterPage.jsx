@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function RegisterPage(){
 
     const {register,handleSubmit, formState: {errors}}= useForm();
@@ -26,7 +26,7 @@ function RegisterPage(){
 
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
     {registerErrors && registerErrors.map((error, i) => (
-            <div key={i} className="bg-red-500 p-2 text-white mb-2">
+            <div key={i} className="bg-red-500 p-2 text-white mb-2 text-center">
               {error}
             </div>
           ))}
@@ -89,6 +89,9 @@ function RegisterPage(){
             </button>
         </div>
         </form>
+        <p className="felx gap-x-2 justify-between">
+            ¿Ya tienes una cuenta aun? <Link  className="text-sky-500" to="/login">Inicia sesion</Link>
+          </p>
 
     
     </div>
