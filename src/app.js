@@ -23,7 +23,8 @@ app.use(cookieParser());
 
 //esto permite que el front con otro dominio pueda acceder al backend 
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: 'http://localhost:5173',
+    credentials:true
 }
 ));
 
