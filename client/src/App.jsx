@@ -19,7 +19,7 @@ function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/categories" element={<CategoriesPage/>}  />
-            <Route path="/new_category" element={<CategoryFormPage/>}  />
+            <Route path="/category/new" element={<CategoryFormPage/>}  />
             <Route path="/category/:id" element={<CategoryFormPage/>}  />
             <Route path="/profile" element={<ProfilePage />}  />
         
