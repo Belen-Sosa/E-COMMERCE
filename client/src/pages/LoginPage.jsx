@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 function LoginPage() {
   const {
     register,
@@ -9,10 +9,19 @@ function LoginPage() {
     formState: { errors },
   } = useForm();
 
-  const { signin, errors: signinErrors } = useAuth();
+  const { signin, errors: signinErrors,isAuthenticated } = useAuth();
+  const navigate= useNavigate();
+
+
+
   const onSubmit = handleSubmit((data) => {
     signin(data);
   });
+
+  useEffect(()=>{
+    if(isAuthenticated) navigate("/categories")
+
+  },[isAuthenticated])
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
