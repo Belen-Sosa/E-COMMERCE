@@ -7,7 +7,7 @@ import { createCategorySchema } from "../schemas/category.schema.js";
 const router = Router();
 
 router.get('/categories',authRequired,getCategories);
-router.get('/categories/id',authRequired,getCategory);
+router.get('/categories/:id',authRequired,getCategory);
 router.post('/categories',authRequired,validateSchema(createCategorySchema),createCategory);
 router.delete('/categories/:id',authRequired,deleteCategory);
 router.put('/categories/:id',authRequired,validateSchema(createCategorySchema),updateCategory);

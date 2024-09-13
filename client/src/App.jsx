@@ -23,7 +23,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/categories" element={<CategoriesPage/>}  />
             <Route path="/category/new" element={<CategoryFormPage/>}  />
-            <Route path="/category/:id" element={<CategoryFormPage/>}  />
+            <Route path="/categories/:id" element={<CategoryFormPage/>}  />
             <Route path="/profile" element={<ProfilePage />}  />
         
             <Route path="/Carrito" element={<h1>Carrito</h1>}  />

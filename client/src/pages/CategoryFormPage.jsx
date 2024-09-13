@@ -1,14 +1,63 @@
 import { useForm } from "react-hook-form"
 
-import {createCategoryRequest} from '../api/categories.js'
+import {createCategoryRequest,getCategoryRequest, updateCategoryRequest} from '../api/categories.js'
+import { useNavigate,useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 function CategoryFormPage(){
 
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit,setValue} = useForm();
 
-    const onSubmit = handleSubmit(async (categorie)=>{
-       const res=  await createCategoryRequest(categorie);
-       console.log(res);
+    const navigate = useNavigate();
+
+    const params = useParams();
+
+    const getCategory = async (id)=> {
+      try {
+        const res = await getCategoryRequest(id);
+        const category = res.data;
+
+        setValue('name', category.name);
+        setValue('description',category.description);
+
+      } catch (error) {
+        console.log(error)
+      }
+     
+    }
+
+ 
+
+    useEffect(()=>{
+     
+      getCategory(params.id);
+    
+      
+    },[])
+
+    const onSubmit = handleSubmit(async (data)=>{
+
+     if(params.id){
+      try {
+        try {
+          const res=  await updateCategoryRequest(params.id, category)
+        } catch (error) {
+          console.log(error);
+        }
+      } catch (error) {
+        console.log(error)
+      }
+      
+     }else{
+      try {
+        const res=  await createCategoryRequest(data);
+        navigate("/categories")
+        console.log(res);
+      } catch (error) {
+        console.log(error)
+      }
+     }
+     
     })
 
     return(
