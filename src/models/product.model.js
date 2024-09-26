@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { host, port } from '../config.js';
+
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -24,10 +26,11 @@ const productSchema = new mongoose.Schema({
     required: true,
     default: 0
   },
-  images: [String],
+  imagesUrl: String,
   
 }, {
   timestamps: true
 });
+
 
 export default mongoose.model('Product', productSchema);

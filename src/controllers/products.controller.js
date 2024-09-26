@@ -1,5 +1,6 @@
 import Product from '../models/product.model.js'
 import Category from '../models/category.model.js'
+import { uploadFile } from '../util/uploadFile.js';
 
 export const getProducts = async ( req, res)=> {
 
@@ -11,24 +12,37 @@ export const getProducts = async ( req, res)=> {
 export const createProduct = async (req, res) => {
     try {
         
-      const { name, description, price, category, stock, images } = req.body;
-  
+      const { name, description, price, category, stock } = req.body;
+      const image = req.file
+      let imageUrl;
+ 
       // Verificar que la categoría exista
       const categoryExists = await Category.findById(category);
       if (!categoryExists) {
         return res.status(400).json({ message: "La categoría no existe." });
       }
-  
-      // Crear un nuevo producto
-      const newProduct = new Product({
-        name,
-        description,
-        price,
-        category,
-        stock: stock || 0,  // Si no se proporciona stock, el valor por defecto será 0
-        images: images || [] // Si no se proporcionan imágenes, el valor será un array vacío
-      });
-  
+
+
+      
+      if(image && image.length >0){
+         const {downloadURL} = await uploadFile(image[0])
+        
+         imageUrl = downloadURL;
+
+      }
+    
+     
+    // Crear un nuevo producto
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      category,
+      stock: stock || 0,  // Si no se proporciona stock, el valor por defecto será 0
+      image: imageUrl || "" // Si no se proporcionan imágenes, el valor será un array vacío
+    });
+
+   
       // Guardar el producto en la base de datos
       const savedProduct = await newProduct.save();
   
