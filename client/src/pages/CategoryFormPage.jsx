@@ -40,7 +40,8 @@ function CategoryFormPage(){
      if(params.id){
       try {
         try {
-          const res=  await updateCategoryRequest(params.id, category)
+          const res=  await updateCategoryRequest(params.id, data)
+          navigate("/categories")
         } catch (error) {
           console.log(error);
         }

@@ -1,35 +1,24 @@
 import { useEffect, useState } from "react"
-import { getCategoriesRequest,deleteCategoryRequest } from "../api/categories"
 import { Link } from "react-router-dom";
+import { useCategories } from "../context/CategoryContext";
 
 function CategoriesPage(){
 
-    const [categories,setCategories] = useState([]);
+
+    const {getCategories,categories,deleteCategory}= useCategories();
     useEffect(() => {
-        const getData = async () => {
-          try {
-            const res = await getCategoriesRequest();
-            setCategories(res.data);
-            console.log(res);
-          } catch (error) {
-            console.log(error);
-          }
-        };
+       
     
-        getData(); 
+        getCategories(); 
       }, []); 
     
-     const deleteCategory = async (id)=>{
-      try {
-        const res=  await deleteCategoryRequest(id);
-        if(res.status === 200) setCategories(categories.filter(category => category._id !== id ));
-      } catch (error) {
-        console.log(error)
-      }
- 
-     }
+      if(categories.length===0) return (<h1>no hay categorias</h1>)
+  
 
     return(
+      <>
+              <Link to="/category/new">Añadir Categoria</Link>
+           
         <div>{categories.map(category=>(<div key={category._id} > 
             <h1>{category.name}</h1>
             <p>{category.description}</p>
@@ -40,7 +29,8 @@ function CategoriesPage(){
               <Link to={`/categories/${category._id}`}>Editar</Link>
             </div>
         </div>))}</div>
-    )
+        </>
+    ) 
 }
 
 export default CategoriesPage

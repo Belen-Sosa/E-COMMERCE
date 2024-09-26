@@ -11,9 +11,12 @@ function Navbar() {
       <ul className="flex gap-x-2">
         {isAuthenticated ? (
           <>
-            <li>Bienvenido {user.username}</li>
+          
             <li>
-              <Link to="/category/new">Añadir Categoria</Link>
+              <Link to="/categories"> Categorias</Link>
+            </li>
+            <li>
+              <Link to="/products"> Productos</Link>
             </li>
             <li>
               <Link

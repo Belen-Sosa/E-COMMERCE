@@ -1,6 +1,10 @@
+
+
 function HomePage(){
+
+
     return(
-        <div>HomePage</div>
+        <div> Bienvenido </div>
     )
 }
 

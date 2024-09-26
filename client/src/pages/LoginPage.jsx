@@ -37,7 +37,7 @@ function LoginPage() {
             <div>
               <label
                 htmlFor="usuario"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-sm font-medium leading-6 text-white"
               >
                 Correo electronico
               </label>
@@ -59,7 +59,7 @@ function LoginPage() {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6 text-white"
                 >
                   Contraseña
                 </label>
