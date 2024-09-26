@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useCategories } from "../context/CategoryContext.jsx";
 
 function ProductFormPage() {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit } = useForm();
   const [images, setimages] = useState([]);
   //context de categories
   const { getCategories, categories } = useCategories();
@@ -19,13 +19,6 @@ function ProductFormPage() {
   const navigate = useNavigate();
 
   const params = useParams();
-
-  const getProduct = async (id) => {
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     getCategories();
