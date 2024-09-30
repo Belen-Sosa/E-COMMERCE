@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import { getProductsRequest,deleteProductRequest } from "../api/products"
 import { Link } from "react-router-dom";
+import { useCategories } from "../context/CategoryContext.jsx";
 
 function ProductsPage(){
 
     const [products,setProducts] = useState([]);
+    const { getCategories, categories } = useCategories();
   
     useEffect(() => {
+      getCategories();
         const getData = async () => {
           try {
             const res = await getProductsRequest();
@@ -43,13 +46,17 @@ function ProductsPage(){
               <p>categoria: {product.category}</p>
               <p>stock: {product.stock}</p>
     
-              {/* Mostrar la imagen */}
-              <img
-                src={`http://localhost:3000${product.image}`}
-                alt={product.name}
-                style={{ width: "200px", height: "200px" }} // Ajusta el tamaño según sea necesario
-              />
-    
+             {/* Mostrar todas las imágenes */}
+             <div>
+              {product.images.map((image, index) => (
+                <img
+                  key={index}
+                  src={`http://localhost:3000${image}`}
+                  alt={product.name}
+                  style={{ width: "200px", height: "200px" }} // Ajusta el tamaño según sea necesario
+                />
+              ))}
+            </div>
               <div>
                 <button
                   onClick={() => {

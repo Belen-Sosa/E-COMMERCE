@@ -15,11 +15,10 @@ export const getProducts = async ( req, res)=> {
       return res.status(500).json({message: "Algo salio mal."})
   }
 }
-
 export const createProduct = async (req, res) => {
   try {
     const { name, description, price, category, stock } = req.body;
-    const image = req.file; // Asumiendo que estás usando `multer`
+    const { files } = req; // 'files' contendrá un array de las imágenes subidas
 
     // Verificar que la categoría exista
     const categoryExists = await Category.findById(category);
@@ -27,17 +26,22 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: "La categoría no existe." });
     }
 
-    // Validar si la imagen es válida
-    if (image && !image.mimetype.match(/image\/(jpg|jpeg|png)/)) {
-      const uploadsDirectory = path.resolve('public/uploads');
-      const filePath = path.join(uploadsDirectory, image.filename);
+    // Validar imágenes y limpiar archivos no válidos
+    const imageUrls = []; // Array para almacenar las rutas de las imágenes válidas
 
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath); // Eliminar la imagen si no es válida
+    if (files && files.length > 0) {
+      for (const file of files) {
+        if (!file.mimetype.match(/image\/(jpg|jpeg|png)/)) {
+          return res.status(400).json({
+            message: "Formato de imagen no válido. Solo se aceptan .jpg o .png",
+          });
+        }
+        // Agregar la ruta de la imagen válida al array
+        imageUrls.push('/uploads/' + file.filename);
       }
-
+    } else {
       return res.status(400).json({
-        message: "Formato de imagen no válido. Solo se aceptan .jpg o .png",
+        message: "No se subieron imágenes. Por favor, seleccione al menos una imagen.",
       });
     }
 
@@ -48,7 +52,7 @@ export const createProduct = async (req, res) => {
       price,
       category,
       stock: stock || 0,
-      image: image ? '/uploads/' + image.filename : "", // Asegurarte que la ruta de la imagen sea correcta
+      images: imageUrls, // Almacenar el array de rutas de imágenes
     });
 
     // Guardar el producto en la base de datos
@@ -61,6 +65,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
+
 export const getProduct = async ( req, res)=> {
 
     const product= await Product.findById(req.params.id);
@@ -68,67 +73,69 @@ export const getProduct = async ( req, res)=> {
     res.json(product);
 
 }
-
 export const updateProduct = async (req, res) => {
   try {
-      const { name, description, price, category, stock } = req.body;
-      const image = req.file; // La nueva imagen que se sube
+    const { name, description, price, category, stock } = req.body;
+    const { files } = req; // 'files' contendrá un array de las imágenes subidas
 
-      // Buscar el producto actual
-      const product = await Product.findById(req.params.id);
-      if (!product) return res.status(404).json({ message: 'Producto no encontrado.' });
+    // Buscar el producto actual
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Producto no encontrado.' });
 
-      // Verificar y actualizar los campos solo si se proporciona un nuevo valor
-      if (name) product.name = name;
-      if (description) product.description = description;
-      if (price) product.price = price;
-      if (category) {
-          const categoryExists = await Category.findById(category);
-          if (!categoryExists) {
-              return res.status(400).json({ message: "La categoría no existe." });
-          }
-          product.category = category;
+    // Verificar y actualizar los campos solo si se proporciona un nuevo valor
+    if (name) product.name = name;
+    if (description) product.description = description;
+    if (price) product.price = price;
+    if (category) {
+      const categoryExists = await Category.findById(category);
+      if (!categoryExists) {
+        return res.status(400).json({ message: "La categoría no existe." });
       }
-      if (stock !== undefined) product.stock = stock; // Permite que el stock se mantenga igual si no se proporciona
+      product.category = category;
+    }
+    if (stock !== undefined) product.stock = stock; // Permite que el stock se mantenga igual si no se proporciona
 
-      // Validar si se proporciona una nueva imagen
-      if (image) {
-          if (!image.mimetype.match(/image\/(jpg|jpeg|png)/)) {
-              const uploadsDirectory = path.resolve('public/uploads');
-              const filePath = path.join(uploadsDirectory, image.filename);
+    // Validar y manejar imágenes subidas
+    const imageUrls = []; // Array para almacenar las rutas de las imágenes válidas
 
-              if (fs.existsSync(filePath)) {
-                  fs.unlinkSync(filePath); // Eliminar la imagen si no es válida
-              }
-
-              return res.status(400).json({
-                  message: "Formato de imagen no válido. Solo se aceptan .jpg o .png",
-              });
-          }
-
-          // Si hay una nueva imagen, elimina la imagen antigua
-          const oldImagePath = path.join(path.resolve('public/uploads'), product.image.split('/uploads/')[1]);
-          if (fs.existsSync(oldImagePath)) {
-              fs.unlinkSync(oldImagePath); // Eliminar la imagen anterior
-          }
-
-          // Actualiza la ruta de la imagen en el producto
-          product.image = '/uploads/' + image.filename;
+    if (files && files.length > 0) {
+      // Eliminar imágenes antiguas antes de agregar nuevas
+      const oldImages = product.images; // Almacena las rutas de las imágenes antiguas
+      for (const oldImage of oldImages) {
+        const oldImagePath = path.join(path.resolve('public/uploads'), oldImage.split('/uploads/')[1]);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath); // Eliminar la imagen anterior
+        }
       }
 
-      // Guardar el producto actualizado en la base de datos
-      const updatedProduct = await product.save();
+      // Validar imágenes y agregar nuevas rutas
+      for (const file of files) {
+        if (!file.mimetype.match(/image\/(jpg|jpeg|png)/)) {
+          return res.status(400).json({
+            message: "Formato de imagen no válido. Solo se aceptan .jpg o .png",
+          });
+        }
+        // Agregar la ruta de la imagen válida al array
+        imageUrls.push('/uploads/' + file.filename);
+      }
+    }
 
-      // Responder con el producto actualizado
-      res.json(updatedProduct);
+    // Actualiza las imágenes del producto
+    product.images = imageUrls; // Almacenar el array de rutas de imágenes
+
+    // Guardar el producto actualizado en la base de datos
+    const updatedProduct = await product.save();
+
+    // Responder con el producto actualizado
+    res.json(updatedProduct);
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const deleteProduct = async ( req, res)=> {
 
-    const product= await Category.findByIdAndDelete(req.params.id);
-    if(!category) return res.status(404).json({message: 'Categoria no encontrada.'});
-    res.json(category);
+    const product= await Product.findByIdAndDelete(req.params.id);
+    if(!product) return res.status(404).json({message: 'Producto no encontrado.'});
+    res.json(product);
 }

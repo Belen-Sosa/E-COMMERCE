@@ -25,7 +25,7 @@ export const productSchema = z.object({
     stock: z.number({
         required_error: "El stock del producto debe ser un número.",
     }).min(0).default(0).optional(), // Opcional para actualización
-    image: z.string({
+    images: z.string({
         required_error: "La imagen debe ser un string",
     }).optional().nullable().refine((val) => {
         if (!val) return true; // Permitir null o undefined

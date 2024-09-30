@@ -22,13 +22,12 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 
-// Servir archivos estáticos desde la carpeta 'public'
-
 
 // Crear __dirname manualmente
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+// Configuración para servir archivos estáticos desde "products/uploads"
+app.use(express.static(path.join(__dirname, '../public')));
 
 
 //este middleware nos permite convertir las cookies a un objeto json

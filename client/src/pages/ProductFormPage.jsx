@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
-import { createProductRequest, updateProductRequest } from "../api/products.js";
+import { createProductRequest, updateProductRequest,getProductRequest } from "../api/products.js";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCategories } from "../context/CategoryContext.jsx";
 
 function ProductFormPage() {
@@ -9,17 +9,34 @@ function ProductFormPage() {
   const { getCategories, categories } = useCategories();
   const navigate = useNavigate();
   const params = useParams();
+  const [product, setProduct] = useState({}); 
 
-  useEffect(() => {
-    getCategories();
-    if (params.id) {
-      getProduct(params.id).then((product) => {
-        setValue("name", product.name);
+
+
+  const getProduct = async (id)=> {
+    try {
+      const res = await getProductRequest(id);
+      const product = res.data;
+      setProduct(product); // Guarda el producto en el estado
+      console.log(product)
+      setValue("name", product.name);
         setValue("description", product.description);
         setValue("price", product.price);
         setValue("category", product.category);
         setValue("stock", product.stock);
-      });
+        setValue("images", product.images);
+
+    } catch (error) {
+      console.log(error)
+    }
+   
+  }
+
+
+  useEffect(() => {
+    getCategories();
+    if (params.id) {
+      getProduct(params.id);
     }
   }, [params.id, setValue]);
 
@@ -32,10 +49,13 @@ function ProductFormPage() {
     formData.append("category", data.category);
     formData.append("stock", data.stock);
 
-    // Si hay una imagen seleccionada, agregarla al FormData
-    if (data.image && data.image[0]) {
-      formData.append("image", data.image[0]);
-    }
+      // Manejar las imágenes seleccionadas
+  if (data.images && data.images.length > 0) {
+    const filesArray = Array.from(data.images);
+    filesArray.forEach((file) => {
+      formData.append("imagenes", file); // Cambia el nombre aquí a 'imagenes'
+    });
+  }
 
     try {
       if (params.id) {
@@ -96,13 +116,29 @@ function ProductFormPage() {
             />
 
             <br />
-            {/* INPUT IMAGES */}
+
+            {/* Mostrar todas las imágenes */}
+            {product.images && product.images.length > 0 && (
+              <div>
+                {product.images.map((image, index) => (
+                  <img
+                    key={index}
+                    src={`http://localhost:3000${image}`} // Ajusta esta URL si es necesario
+                    alt={product.name}
+                    style={{ width: "200px", height: "200px" }} // Ajusta el tamaño según sea necesario
+                  />
+                ))}
+              </div>
+            )}
+            {/* INPUT MULTIPLE IMAGES */}
             <label>
-              <span>Seleccionar archivos </span>
+              <span>Seleccionar imágenes </span>
               <input
                 type="file"
-                {...register("image")}
+                 name="imagenes"
+                {...register("images")}
                 accept=".jpg,.jpeg,.png"
+                multiple // Permitir la selección de varias imágenes
               />
             </label>
 
