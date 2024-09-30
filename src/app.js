@@ -2,6 +2,8 @@ import express from 'express';
 import morgan from "morgan";
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 //importando rutas
 import authRoutes from './routes/auth.routes.js'
@@ -18,6 +20,17 @@ const app = express()
 app.use(morgan('dev'));
 //esto es para que express pueda convertir los reqbody en formato json y pueda entenderlos
 app.use(express.json());
+
+
+// Servir archivos estáticos desde la carpeta 'public'
+
+
+// Crear __dirname manualmente
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
+
 //este middleware nos permite convertir las cookies a un objeto json
 app.use(cookieParser());
 

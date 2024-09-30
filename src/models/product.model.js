@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { host, port } from '../config.js';
+
 
 
 const productSchema = new mongoose.Schema({
@@ -26,7 +26,11 @@ const productSchema = new mongoose.Schema({
     required: true,
     default: 0
   },
-  imagesUrl: String,
+  image:{
+    type: String ,
+    required: false,
+    default: ""
+  },
   
 }, {
   timestamps: true

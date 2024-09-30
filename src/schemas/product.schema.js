@@ -1,33 +1,36 @@
 import { z } from "zod";
-
 import mongoose from 'mongoose';
 
 // Validador personalizado para ObjectId de MongoDB
 const objectIdSchema = z.string().refine((value) => {
     return mongoose.Types.ObjectId.isValid(value);
-  }, {
+}, {
     message: "La categoría debe ser un ObjectId válido.",
-  });
+});
 
-
-
-// Validación de las imágenes (arreglo de cadenas)
-
-
-// Esquema principal de registro
-export const createProductSchema = z.object({
-  name: z.string({
-    required_error: "El nombre de el producto es requerido.",
-  }),
-  description: z.string({
-    required_error: "La descripción es requerida.",
-  }).max(30, {
-    message: "La descripción debe contener menos de 30 caracteres.",
-  }),
-  price: z.number({
-    required_error: "El precio de el producto es requerido y debe ser un numero.",
-  }),
-  category: objectIdSchema, // Validamos que sea un ObjectId válido
-  stock: z.number().min(0).default(0), // Stock con valor mínimo 0
-  image: z.string().optional().nullable(), // Permitir que sea un string opcional o nulo
+// Esquema principal de producto (para crear y actualizar)
+export const productSchema = z.object({
+    name: z.string({
+        required_error: "El nombre del producto es requerido.",
+    }).optional(), // Opcional para actualización
+    description: z.string({
+        required_error: "La descripción es requerida.",
+    }).max(30, {
+        message: "La descripción debe contener menos de 30 caracteres.",
+    }).optional(), // Opcional para actualización
+    price: z.number({
+        required_error: "El precio del producto es requerido y debe ser un número.",
+    }).optional(), // Opcional para actualización
+    category: objectIdSchema.optional(), // Opcional para actualización
+    stock: z.number({
+        required_error: "El stock del producto debe ser un número.",
+    }).min(0).default(0).optional(), // Opcional para actualización
+    image: z.string({
+        required_error: "La imagen debe ser un string",
+    }).optional().nullable().refine((val) => {
+        if (!val) return true; // Permitir null o undefined
+        return val.endsWith(".jpg") || val.endsWith(".png"); // Validar la extensión
+    }, {
+        message: "La imagen debe tener una extensión .jpg o .png",
+    }),
 });

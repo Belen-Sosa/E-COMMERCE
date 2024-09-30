@@ -1,54 +1,57 @@
 import { useForm } from "react-hook-form";
-
-import {
-  createProductRequest,
-  getProductRequest,
-  updateProductRequest,
-} from "../api/products.js";
+import { createProductRequest, updateProductRequest } from "../api/products.js";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCategories } from "../context/CategoryContext.jsx";
 
 function ProductFormPage() {
-  const { register, handleSubmit } = useForm();
-
-  //context de categories
+  const { register, handleSubmit, setValue } = useForm();
   const { getCategories, categories } = useCategories();
-  console.log(categories);
-
   const navigate = useNavigate();
-
   const params = useParams();
 
   useEffect(() => {
     getCategories();
-    getProduct(params.id);
-  }, []);
+    if (params.id) {
+      getProduct(params.id).then((product) => {
+        setValue("name", product.name);
+        setValue("description", product.description);
+        setValue("price", product.price);
+        setValue("category", product.category);
+        setValue("stock", product.stock);
+      });
+    }
+  }, [params.id, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
-    if (params.id) {
-      try {
-        try {
-          const res = await updateProductRequest(params.id, data);
-          navigate("/products");
-        } catch (error) {
-          console.log(error);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      try {
-        const res = await createProductRequest(data);
+    // Crear un objeto FormData para manejar datos y archivos
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description);
+    formData.append("price", data.price);
+    formData.append("category", data.category);
+    formData.append("stock", data.stock);
+
+    // Si hay una imagen seleccionada, agregarla al FormData
+    if (data.image && data.image[0]) {
+      formData.append("image", data.image[0]);
+    }
+
+    try {
+      if (params.id) {
+        // Actualizar producto
+        const res = await updateProductRequest(params.id, formData);
+        navigate("/products");
+      } else {
+        // Crear nuevo producto
+        const res = await createProductRequest(formData);
         navigate("/products");
         console.log(res);
-      } catch (error) {
-        console.log(error);
       }
+    } catch (error) {
+      console.log(error);
     }
   });
-
-
 
   return (
     <>
@@ -59,50 +62,51 @@ function ProductFormPage() {
               type="text"
               placeholder="Nombre"
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...register("name")}
+              {...register("name", { required: true })}
               autoFocus
             />
             <input
               type="text"
               placeholder="Descripción"
-              className=" mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...register("description")}
+              className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              {...register("description", { required: true })}
             />
             <input
               type="number"
               placeholder="Precio"
-              className=" mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...register("price")}
+              className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              {...register("price", { required: true })}
             />
-
-            <select               className=" mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            <select
+              className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              {...register("category", { required: true })}
             >
               {categories.map((category) => (
-                <option key={category._id} value={category._id}  {...register("category")}>
+                <option key={category._id} value={category._id}>
                   {category.name}
                 </option>
-              ))
-            }
-             
+              ))}
             </select>
 
             <input
               type="number"
               placeholder="Stock"
-              className=" mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...register("stock")}
+              className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              {...register("stock", { required: true })}
             />
 
-            <br></br>
+            <br />
             {/* INPUT IMAGES */}
-            <label >
+            <label>
               <span>Seleccionar archivos </span>
-              <input type="file" multiple onChange={changeInput}   ></input>
+              <input
+                type="file"
+                {...register("image")}
+                accept=".jpg,.jpeg,.png"
+              />
             </label>
 
-
-
-            <button className="  mt-2 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button className="mt-2 flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               Guardar
             </button>
           </form>
