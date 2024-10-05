@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
-  const { isAuthenticated, logout ,user} = useAuth();
+  const { isAuthenticated ,user} = useAuth();
   return (
     <nav className="bg-zinc-700 my-3 flex  justify-between py-5 px-10 rounded-lg">
       <Link to="/">
@@ -19,15 +19,9 @@ function Navbar() {
               <Link to="/products"> Productos</Link>
             </li>
             <li>
-              <Link
-                to="/"
-                onClick={() => {
-                  logout();
-                }}
-              >
-                Cerrar Sesion
-              </Link>
+              <Link to="/profile">Mi perfil</Link>
             </li>
+            
           </>
         ) : (
           <>

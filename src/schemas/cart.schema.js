@@ -1,16 +1,13 @@
 import { z } from 'zod';
 import mongoose from 'mongoose';
-
+// Validador para ObjectId
+const objectIdSchema = z.string().refine((id) => mongoose.Types.ObjectId.isValid(id), {
+  message: "El ID del producto no es válido.",
+});
 export const createCartSchema = z.object({
   userId: z.string().min(1, { message: "El ID de usuario es obligatorio." }), 
-  items: z.array(
-    z.object({
-      productId:  z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
-        message: "El pedido no es valido.",
-      }), 
-      quantity: z.number().min(1, { message: "La cantidad debe ser al menos 1." }) // Asegura que la cantidad sea al menos 1
-    })
-  ),
-  totalAmount: z.number().min(0, { message: "El monto total debe ser mayor a  0." }) // Valida que el totalAmount sea un número positivo
+  productId: objectIdSchema, // Corrige la validación del product_id
+  quantity: z.number().min(1, { message: "La cantidad debe ser al menos 1." }) // Asegura que quantity sea al menos 1
 });
+
 

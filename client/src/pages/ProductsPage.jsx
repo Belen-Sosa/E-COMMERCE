@@ -32,6 +32,10 @@ function ProductsPage(){
       }
  
      }
+     const getCategoryName = (categoryId) => {
+      const category = categories.find((cat) => cat._id === categoryId);
+      return category ? category.name : "Categoría no encontrada";
+    };
 
      return (
       <>
@@ -43,7 +47,7 @@ function ProductsPage(){
               <h1>nombre: {product.name}</h1>
               <p>descripcion: {product.description}</p>
               <p>precio: {product.price}</p>
-              <p>categoria: {product.category}</p>
+              <p>categoria: {getCategoryName(product.category)}</p>
               <p>stock: {product.stock}</p>
     
              {/* Mostrar todas las imágenes */}
