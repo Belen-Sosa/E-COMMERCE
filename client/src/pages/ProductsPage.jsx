@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { getProductsRequest,deleteProductRequest } from "../api/products"
 import { Link } from "react-router-dom";
 import { useCategories } from "../context/CategoryContext.jsx";
+import { CartContext } from "../context/CartContext.jsx";
 
 function ProductsPage(){
 
     const [products,setProducts] = useState([]);
     const { getCategories, categories } = useCategories();
+    const {addItemToCart}= useContext(CartContext)
   
     useEffect(() => {
       getCategories();
@@ -70,6 +72,7 @@ function ProductsPage(){
                   Eliminar
                 </button>
                 <Link to={`/products/${product._id}`}>Editar</Link>
+                <button onClick={()=> addItemToCart(product)}>Añadir al carrito</button>
               </div>
             </div>
           ))}

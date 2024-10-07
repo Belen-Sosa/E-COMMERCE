@@ -11,11 +11,14 @@ import Navbar from "./components/Navbar"
 import ProductsPage from "./pages/ProductsPage"
 import ProductFormPage from "./pages/ProductFormPage"
 import { CategoryProvider } from "./context/CategoryContext"
+import { CartProvider } from "./context/CartContext"
 function App() {
 
   return (
    <AuthProvider>
+    
     <CategoryProvider>
+      <CartProvider>
         <BrowserRouter>
 
           <Navbar />
@@ -47,6 +50,7 @@ function App() {
 
           </Routes>
         </BrowserRouter>
+        </CartProvider>
       </CategoryProvider>
    </AuthProvider>
   )

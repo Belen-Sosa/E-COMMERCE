@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Cart from "./Cart";
 
 function Navbar() {
   const { isAuthenticated ,user} = useAuth();
@@ -17,6 +18,9 @@ function Navbar() {
             </li>
             <li>
               <Link to="/products"> Productos</Link>
+            </li>
+            <li>
+              <Cart/>
             </li>
             <li>
               <Link to="/profile">Mi perfil</Link>
