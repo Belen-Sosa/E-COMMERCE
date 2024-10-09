@@ -12,7 +12,7 @@ import { CartContext } from "../context/CartContext";
         style={{ width: "50", height: "50px" }} // Ajusta el tamaño según sea necesario
       />
       <div>
-        <p>{item.name}</p> <p>{item.quantity}</p>
+        <p>{item.name}</p> <p>{item.quantity}</p> <p>${item.price}</p>
         <div>
             <button onClick={()=>addItemToCart(item)}>
                 AGREGAR
