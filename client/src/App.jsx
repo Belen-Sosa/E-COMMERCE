@@ -12,6 +12,7 @@ import ProductsPage from "./pages/ProductsPage"
 import ProductFormPage from "./pages/ProductFormPage"
 import { CategoryProvider } from "./context/CategoryContext"
 import { CartProvider } from "./context/CartContext"
+import Cart from "./components/Cart"
 function App() {
 
   return (
@@ -45,6 +46,7 @@ function App() {
 
               <Route path="/profile" element={<ProfilePage />}  />
               <Route path="/Carrito" element={<h1>Carrito</h1>}  />
+             
             </Route>
           
 
