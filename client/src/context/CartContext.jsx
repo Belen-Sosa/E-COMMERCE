@@ -1,65 +1,77 @@
+
 import { createContext, useEffect, useState } from "react";
+
+import { addItemToCartRequest, deleteItemToCartRequest, getProductsCartRequest, updateItemToCartRequest } from "../api/cart";
+
 
 export const CartContext = createContext();
 
+
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState(() => {
+  
+  const [cartItems,setCartItems] = useState([]);
+ 
+
+
+
+  const getProductsCart = async () => {
     try {
-      //para que no se pierdan los productos cada vez que recargamos la pagina
-      const productInLocalStorage = localStorage.getItem("cartProducts");
-      return productInLocalStorage ? JSON.parse(productInLocalStorage) : [];
+        const res = await getProductsCartRequest();
+        console.log(res.data.items);
+        setCartItems(res.data.items || []); // Establece un array vacío por defecto si `items` es null o undefined
     } catch (error) {
-      return [];
+        console.log(error);
+        setCartItems([]); // En caso de error, inicializa el carrito como un array vacío
     }
-  });
+};
+
+
 
   useEffect(() => {
-    localStorage.setItem("cartProducts", JSON.stringify(cartItems));
-
+  
+    getProductsCart();
 
     console.log(cartItems)
-  }, [cartItems]);
+  }, []);
 
-  const addItemToCart = (product) => {
-    const inCart = cartItems.find(
-      (productInCart) => productInCart._id === product._id
-    );
+  const addItemToCart = async (product) => {
 
-    if (inCart) {
-      setCartItems(
-        cartItems.map((productInCart) => {
-          if (productInCart._id === product._id) {
-            return { ...inCart, quantity: inCart.quantity + 1 };
-          } else return productInCart;
-        })
-      );
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
+    const {_id }= product;
+
+      try {
+
+          const res = await addItemToCartRequest({ productId:_id,quantity:1 });
+   
+          getProductsCart();
+      } catch (error) {
+      console.log(error)
+      }   
   };
 
- const  deleteItemToCart = (product) => {
-    const inCart = cartItems.find(
-      (productInCart) => productInCart._id === product._id
-    );
+ const  editItemToCart = async (product_id,query, quantity) => {
+  if(query=== "del" && quantity===1){
+    try {
+      const res = await deleteItemToCartRequest( product_id );
+   
+  } catch (error) {
+  console.log(error)
+  }   
+     
+  }else{
+    try {
+      const res = await updateItemToCartRequest(product_id,query );
+   
+  } catch (error) {
+  console.log(error)
+  } 
+  }
 
-    if (inCart.quantity === 1) {
-      setCartItems(
-        cartItems.filter((productInCart) => productInCart._id !== product._id)
-      );
-    } else {
-      setCartItems(cartItems.map((productInCart) => {
-        if (productInCart._id === product._id) {
-          return { ...inCart, quantity: inCart.quantity - 1 };
-        } else return productInCart;
-      })
-    );
-    }
+  getProductsCart();
   };
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addItemToCart, deleteItemToCart }}
+      value={{ cartItems,addItemToCart,editItemToCart }}
     >
       {children}
     </CartContext.Provider>

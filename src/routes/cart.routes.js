@@ -5,9 +5,9 @@ import { validateSchema } from "../middlewares/validator.middleware.js";
 import {  createCartSchema} from "../schemas/cart.schema.js";
 const router = Router();
 
-router.get('/cart/:user_id',authRequired,getCart);
+router.get('/cart',authRequired,getCart);
 router.post('/cart/add_item',authRequired,validateSchema(createCartSchema),addItemToCart);
-router.delete('/cart/:user_id/:product_id',authRequired,deleteProductCart);
-router.put('/cart/:product_id/:user_id',authRequired,putProductCart);
+router.delete('/cart/:product_id',authRequired,deleteProductCart);
+router.put('/cart/:product_id',authRequired,putProductCart);
 
 export default router;

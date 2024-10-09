@@ -2,8 +2,9 @@ import { useContext } from "react";
 import { CartContext } from "../context/CartContext";
 
  const ItemCart = ({item})=>{
-     const {deleteItemToCart,addItemToCart}= useContext(CartContext);
-     const {id} = item;
+     const {editItemToCart} = useContext(CartContext);
+  
+     const {quantity}= item;
     return (
         <div> <img
        
@@ -14,10 +15,10 @@ import { CartContext } from "../context/CartContext";
       <div>
         <p>{item.name}</p> <p>{item.quantity}</p> <p>${item.price}</p>
         <div>
-            <button onClick={()=>addItemToCart(item)}>
+            <button onClick={()=>editItemToCart(item.productId,"add",quantity)}>
                 AGREGAR
             </button>
-            <button onClick={()=> deleteItemToCart(item)}>SACAR</button>
+            <button onClick={()=> editItemToCart(item.productId,"del",quantity)}>SACAR</button>
         </div>
       </div>
       <div>

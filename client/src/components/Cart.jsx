@@ -6,13 +6,15 @@ const Cart = ()=>{
     const [productsLength, setProductLength] = useState(0)
     const {cartItems} = useContext(CartContext);
 
-    useEffect(()=>{
-        setProductLength(
-            cartItems.reduce((previous, current)=> previous+current.quantity,0)
-        )
-    },[cartItems]);
-
-    const total = cartItems.reduce((previous,current)=>previous+current.quantity*current.price,0)
+    useEffect(() => {
+        if (Array.isArray(cartItems)) {
+            setProductLength(cartItems.reduce((previous, current) => previous + current.quantity, 0));
+        }
+    }, [cartItems]);
+    
+    const total = Array.isArray(cartItems)
+        ? cartItems.reduce((previous, current) => previous + current.quantity * current.price, 0)
+        : 0;
     return(
         <div>Cart
             <div onClick={()=> setCartOpen(!cartOpen)}>
