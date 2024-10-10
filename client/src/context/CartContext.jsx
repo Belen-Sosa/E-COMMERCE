@@ -35,12 +35,14 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   const addItemToCart = async (product) => {
+    console.log("add item " ,product)
+    const {_id,images }= product;
 
-    const {_id }= product;
+
 
       try {
 
-          const res = await addItemToCartRequest({ productId:_id,quantity:1 });
+          const res = await addItemToCartRequest({ productId:_id,quantity:1,image: images[0]?images[0]:"" });
    
           getProductsCart();
       } catch (error) {

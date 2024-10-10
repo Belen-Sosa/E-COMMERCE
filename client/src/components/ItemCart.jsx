@@ -5,6 +5,7 @@ import { CartContext } from "../context/CartContext";
      const {editItemToCart} = useContext(CartContext);
   
      const {quantity}= item;
+     console.log(item)
     return (
         <div> <img
        
@@ -13,6 +14,10 @@ import { CartContext } from "../context/CartContext";
         style={{ width: "50", height: "50px" }} // Ajusta el tamaño según sea necesario
       />
       <div>
+
+
+
+        
         <p>{item.name}</p> <p>{item.quantity}</p> <p>${item.price}</p>
         <div>
             <button onClick={()=>editItemToCart(item.productId,"add",quantity)}>

@@ -59,7 +59,7 @@ export const deleteProductCart = async ( req, res)=> {
 export const addItemToCart = async (req, res) => {
 
 
-    const {  productId, quantity } = req.body;
+    const {  productId, quantity ,image} = req.body;
     console.log(req.body);
     console.log(req.user)
     console.log('estamos aquiiiiiiiiii')
@@ -80,7 +80,7 @@ export const addItemToCart = async (req, res) => {
             // Si no existe el carrito lo crea
             cart = new Cart({
                 userId:req.user.id,
-                items: [{ productId, quantity, price, subtotal }],
+                items: [{ productId, quantity, price, subtotal,image }],
                 totalAmount: subtotal
             });
         } else {
@@ -93,7 +93,7 @@ export const addItemToCart = async (req, res) => {
                 cart.items[existingItemIndex].subtotal = cart.items[existingItemIndex].quantity * cart.items[existingItemIndex].price;
             } else {
                 // Si no existe, agregar el nuevo producto al carrito
-                cart.items.push({ productId, quantity, price, subtotal });
+                cart.items.push({ productId, quantity, price, subtotal,image});
             }
 
             // Recalcular el totalAmount sumando los subtotales de todos los productos
