@@ -25,16 +25,6 @@ const orderSchema = new mongoose.Schema({
   totalAmount: {
     type: Number,
     required: true
-  },
-  shippingAddress: {
-    street: String,
-    city: String,
-    zip: String,
-  },
-  status: {
-    type: String,
-    enumeración: ['procesando', 'enviado', 'entregado', 'cancelado'],
-    default: 'procesando'
   }
  
 }, {

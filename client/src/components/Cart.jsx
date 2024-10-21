@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const Cart = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [productsLength, setProductLength] = useState(0);
-  const { cartItems } = useContext(CartContext);
+  const { cartItems,getProductsCart } = useContext(CartContext);
 
   useEffect(() => {
     if (Array.isArray(cartItems)) {
@@ -20,7 +20,11 @@ const Cart = () => {
   const total = Array.isArray(cartItems)
     ? cartItems.reduce((previous, current) => previous + current.quantity * current.price, 0)
     : 0;
-
+    useEffect(() => {
+      if (!cartItems.length) {
+        getProductsCart(); // Llamar a getProductsCart cuando se monta el carrito si no hay productos
+      }
+    }, [cartItems.length]); 
  
 
   return (

@@ -53,7 +53,7 @@ function CategoryFormPage(){
       try {
         const res=  await createCategoryRequest(data);
         navigate("/categories")
-        console.log(res);
+       
       } catch (error) {
         console.log(error)
       }

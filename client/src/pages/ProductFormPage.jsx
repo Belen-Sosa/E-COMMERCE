@@ -18,7 +18,7 @@ function ProductFormPage() {
       const res = await getProductRequest(id);
       const product = res.data;
       setProduct(product); // Guarda el producto en el estado
-      console.log(product)
+
       setValue("name", product.name);
         setValue("description", product.description);
         setValue("price", product.price);
@@ -66,7 +66,7 @@ function ProductFormPage() {
         // Crear nuevo producto
         const res = await createProductRequest(formData);
         navigate("/products");
-        console.log(res);
+      
       }
     } catch (error) {
       console.log(error);

@@ -7,8 +7,8 @@ import Product from '../models/product.model.js';
 export const  getCart = async ( req, res)=> {
 
     try {
-        let cart = await Cart.findOne({ userId: req.user.id });
-
+        let cart = await Cart.findOne({ userId: req.user.id })
+        .populate('items.productId', 'name');
         if (!cart) {
            
             cart = new Cart({
@@ -19,7 +19,7 @@ export const  getCart = async ( req, res)=> {
 
             await cart.save(); // Guarda el carrito nuevo en la base de datos
         }
-
+ 
         res.json(cart);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener el carrito.', error });
