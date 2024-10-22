@@ -1,4 +1,10 @@
+
 import Payment from '../models/payment.model.js'
+// SDK de Mercado Pago
+import { MercadoPagoConfig,Preference } from 'mercadopago';
+// Agrega credenciales
+const client = new MercadoPagoConfig({ accessToken: 'YOUR_ACCESS_TOKEN' });
+
 
 export const getPayments = async ( req, res)=> {
 
@@ -16,8 +22,43 @@ export const createPayment = async ( req, res)=> {
         paymentStatus
     });
 
+
     const savedPayment=  await newPayment.save();
+
     res.json(savedPayment);
+    
+
+}
+
+export const createPaymentMP = async ( req, res)=> {
+    
+   try {
+    const {items}= req.body;
+
+    const body ={
+        items,
+        back_urls :{
+            success: "https://roadmap.sh/full-stack",
+            failure: "https://roadmap.sh/full-stack",
+            pending: "https://roadmap.sh/full-stack",
+        },
+        auto_return : "approved"
+    
+    };
+
+    const preference=  new Preference(client )
+    const result = await preference.create({body})
+    res.json({
+        id: result.id,
+
+    })
+   } catch (error) {
+    console.log(error)
+    res.status(500).json({
+        error: "error al crear la preferencia"
+    })
+   }
+    
 
 }
 

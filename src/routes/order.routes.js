@@ -8,7 +8,8 @@ const router = Router();
 
 router.get('/orders',authRequired,getOrders);
 router.get('/orders/id',authRequired,getOrder);
-router.post('/orders',authRequired,validateSchema(createOrderSchema),createOrder);
+//router.post('/orders',authRequired,validateSchema(createOrderSchema),createOrder);
+router.post('/orders',authRequired,createOrder);
 router.delete('/orders/:id',authRequired,deleteOrder);
 router.put('/orders/:id',authRequired,validateSchema(createOrderSchema),updateOrder);
 

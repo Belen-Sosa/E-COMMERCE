@@ -3,20 +3,21 @@ import { useContext, useEffect, useState } from "react";
 
 import { CartContext } from "../context/CartContext";
 import { createOrder } from "../api/order";
-import { Link } from "react-router-dom";
-initMercadoPago("YOUR_PUBLIC_KEY", {
+
+initMercadoPago("your acces token", {
   locale: "es-AR",
 });
 
 function OrderPage() {
-  const {cartData,cartItems,editItemToCart,getDataCart } = useContext(CartContext);
+  const {cartData,editItemToCart,getDataCart } = useContext(CartContext);
   console.log("cartData",cartData)
 
   const [preferenceId, setPreferenceId] = useState(null); // Guarda el preferenceId para usar en Wallet
   const buy_products = async () => {
     try {
-      const response = await createOrder(cartItems);
-      const preference = await response.json();
+      const response = await createOrder(cartData);
+      console.log("response",response)
+      const preference = await response.data;
 
       // Guarda el preferenceId para montar el Wallet
       setPreferenceId(preference._id);
@@ -30,6 +31,7 @@ function OrderPage() {
 
   const renderCheckoutButton = () => {
     if (preferenceId) {
+      if (window.checkoutButton)  window.checkoutButton.unmout();
       return (
 
 
@@ -40,7 +42,8 @@ function OrderPage() {
           }}
         />
       );
-    }
+    
+  }
     return null;
   };
   return (

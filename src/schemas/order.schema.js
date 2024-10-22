@@ -15,12 +15,7 @@ export const createOrderSchema = z.object({
     price: z.number().positive({ message: "El precio debe ser un numero positivo" }),
   })),
   totalAmount: z.number().positive({ message: "El total debe ser un numero positivo" }),
-  shippingAddress: z.object({
-    street: z.string(),
-    city: z.string(),
-    zip: z.string()
-  }),
-  status: z.enum(['procesando', 'enviado', 'entregado', 'cancelado']).default('procesando')
+ 
 });
 
 

@@ -6,14 +6,13 @@ export const getOrders = async ( req, res)=> {
     res.json(orders);
 }
 export const createOrder = async ( req, res)=> {
-    const {userId, items,totalAmount,shippingAddress,status,}= req.body;
+    
+    const {userId, items,totalAmount}= req.body;
 
     const newOrder = new Order({
         userId,
         items,
-        totalAmount,
-        shippingAddress,
-        status
+        totalAmount
     });
 
     const savedOrder=  await newOrder.save();
