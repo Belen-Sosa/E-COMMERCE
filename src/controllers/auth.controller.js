@@ -55,6 +55,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
+    console.log("estamos aca")
 
   
     try {
@@ -74,7 +75,7 @@ export const login = async (req, res) => {
 
      //creando jwt
       const token = await createAccessToken({id:userFound._id})
-      
+      console.log("tokeeeen",token)
       //establecer el token en una cookie
       res.cookie('token',token);
 

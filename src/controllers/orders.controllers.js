@@ -1,9 +1,12 @@
 import Order from '../models/order.model.js'
-require('dotenv').config();
+import { config } from 'dotenv';
+config();
+
 // SDK de Mercado Pago
 import { MercadoPagoConfig, Preference } from 'mercadopago';
+
 // Agrega credenciales
-const client = new MercadoPagoConfig({ accessToken: process.env.ACCESS_TOKEN });
+const client = new MercadoPagoConfig({ accessToken: process.env.ACCESS_TOKEN});
 
 
 export const getOrders = async ( req, res)=> {
@@ -38,13 +41,14 @@ export const createOrder = async ( req, res)=> {
     preference.create({
         body:{
             items: itemsWithUnitPrice,  // Enviamos los items ya con 'unit_price'
-        
+           
     
     
     }
     })
     .then((response) => {
         // Enviar el preferenceId al frontend
+        console.log(response)
      res.json(response)
     })
     .catch((error) => {
