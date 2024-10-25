@@ -1,51 +1,46 @@
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
+
 import { useContext, useEffect, useState } from "react";
 
 import { CartContext } from "../context/CartContext";
 import { createOrder } from "../api/order";
 
-initMercadoPago("your acces token", {
-  locale: "es-AR",
-});
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+
 
 function OrderPage() {
+
+  //inicializar mp
+initMercadoPago(process.env.PUBLIC_KEY,{
+  locale:"es-AR",
+});
   const {cartData,editItemToCart,getDataCart } = useContext(CartContext);
   console.log("cartData",cartData)
 
   const [preferenceId, setPreferenceId] = useState(null); // Guarda el preferenceId para usar en Wallet
-  const buy_products = async () => {
+  const createPreference = async () => {
     try {
       const response = await createOrder(cartData);
-      console.log("response",response)
-      const preference = await response.data;
 
-      // Guarda el preferenceId para montar el Wallet
-      setPreferenceId(preference._id);
+  
+
+      const {id} = response.data;
+      return id;
+
+
     } catch (error) {
       console.log(error);
     }
   };
-  
-
-
-
-  const renderCheckoutButton = () => {
-    if (preferenceId) {
-      if (window.checkoutButton)  window.checkoutButton.unmout();
-      return (
-
-
-        <Wallet
-          initialization={{ preferenceId: preferenceId }}
-          customization={{
-            texts: { valueProp: "Paga de forma segura con Mercado Pago" },
-          }}
-        />
-      );
-    
+  const handleBuy = async ()=>{
+    const id = await createPreference();
+    console.log("id aca en handle buyy", id)
+    if(id){
+      setPreferenceId(id)
+    }
   }
-    return null;
-  };
+
+
+
   return (
     <>
 
@@ -70,14 +65,15 @@ function OrderPage() {
                 />
             
             </div>
-              <div>
+             {!preferenceId && <div>
 
 
-              <button onClick={()=>editItemToCart(product.productId._id,"add",product.quantity)}>
+             <button onClick={()=>editItemToCart(product.productId._id,"add",product.quantity)}>
                 AGREGAR
             </button>
             <button onClick={()=> editItemToCart(product.productId._id,"del",product.quantity)}>SACAR</button>
-              </div>
+             
+              </div>}
             </div>
           ))}
 
@@ -86,11 +82,14 @@ function OrderPage() {
 
 
 
-      {/* Muestra el botón de Mercado Pago cuando se tiene un preferenceId */}
-   
-      <button onClick={buy_products}>CONTINUAR COMPRA</button>
 
-      <div id="wallet_container">{renderCheckoutButton()}</div>
+      <button onClick={handleBuy}>Terminar compra</button>
+      
+ {/* boton de pago de mp */}
+{ preferenceId && <Wallet initialization={{ preferenceId: preferenceId }}  />}
+
+
+
     </>
   );
 }

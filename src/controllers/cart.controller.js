@@ -19,6 +19,7 @@ export const  getCart = async ( req, res)=> {
 
             await cart.save(); // Guarda el carrito nuevo en la base de datos
         }
+       
  
         res.json(cart);
     } catch (error) {

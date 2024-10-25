@@ -14,6 +14,9 @@ import { CategoryProvider } from "./context/CategoryContext"
 import { CartProvider } from "./context/CartContext"
 import Cart from "./components/Cart"
 import OrderPage from "./pages/OrderPage"
+import PaymentPage from "./pages/PaymentPage"
+
+
 function App() {
 
   return (
@@ -51,6 +54,7 @@ function App() {
 
               <Route path="/order" element={<OrderPage/>}  />
              
+              <Route path="/payment" element={<PaymentPage />}  />
             </Route>
           
 
