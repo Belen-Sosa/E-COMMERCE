@@ -8,9 +8,10 @@ import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 
 
 function OrderPage() {
+  const publicKey = import.meta.env.VITE_PUBLIC_KEY;
 
   //inicializar mp
-initMercadoPago(process.env.PUBLIC_KEY,{
+initMercadoPago(publicKey,{
   locale:"es-AR",
 });
   const {cartData,editItemToCart,getDataCart } = useContext(CartContext);
