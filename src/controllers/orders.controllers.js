@@ -40,15 +40,14 @@ export const createOrder = async ( req, res)=> {
     
     preference.create({
         body:{
-            items: itemsWithUnitPrice,  // Enviamos los items ya con 'unit_price'
-           
-    
+            items: itemsWithUnitPrice,  // Enviamos los items ya con 'unit_price',
+            notification_url: "https://0a8f-181-230-98-91.ngrok-free.app/api/webhook"
     
     }
+
     })
     .then((response) => {
-        // Enviar el preferenceId al frontend
-        console.log(response)
+        
      res.json(response)
     })
     .catch((error) => {
@@ -59,6 +58,31 @@ export const createOrder = async ( req, res)=> {
 
     
 
+}
+
+export const webHook= async (req, res) =>{
+    const paymentId = req.query.id;
+    try {
+        const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`,{
+            method: 'GET',
+            headers:{
+                'Authorization': `Bearer ${client.accessToken}`
+            }
+        });
+
+        if(response.ok){
+            const data = await response.json();
+            console.log(data);
+
+        }
+
+        res.sendStatus(200);
+
+    } catch (error) {
+        console.log('Error:',error);
+        res.sendStatus(500);
+        
+    }
 }
 
 export const getOrder = async ( req, res)=> {
