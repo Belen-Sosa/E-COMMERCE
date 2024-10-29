@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
   const getProductsCart = async () => {
     try {
       const res = await getProductsCartRequest();
-      console.log("en el context", res.data)
+     
       setCartData(res.data);
       setCartItems(res.data.items || []); // Establece un array vacío por defecto si `items` es null o undefined
     } catch (error) {

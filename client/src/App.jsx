@@ -13,8 +13,10 @@ import ProductFormPage from "./pages/ProductFormPage"
 import { CategoryProvider } from "./context/CategoryContext"
 import { CartProvider } from "./context/CartContext"
 import Cart from "./components/Cart"
-import OrderPage from "./pages/OrderPage"
+import OrderFormPage from "./pages/OrderFormPage"
 import PaymentPage from "./pages/PaymentPage"
+import OrderPage from "./pages/OrdersPage"
+import DetailOrderPage from "./pages/DetailOrderPage"
 
 
 function App() {
@@ -51,9 +53,9 @@ function App() {
               <Route path="/profile" element={<ProfilePage />}  />
               <Route path="/Carrito" element={<h1>Carrito</h1>}  />
 
-
-              <Route path="/order" element={<OrderPage/>}  />
-             
+              <Route path="/orders" element={<OrderPage/>}  />
+              <Route path="/order/new" element={<OrderFormPage/>}  />
+              <Route path="/order/detail" element={<DetailOrderPage/>}  />
               <Route path="/payment" element={<PaymentPage />}  />
             </Route>
           

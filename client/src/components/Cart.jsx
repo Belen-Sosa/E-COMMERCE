@@ -52,7 +52,7 @@ const Cart = () => {
         </div>
       )}
 
-<Link to={'/order'}>Continuar compra</Link>
+<Link to={'/order/new'}>Continuar compra</Link>
 
      
     </div>

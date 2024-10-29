@@ -23,6 +23,9 @@ function Navbar() {
               <Cart/>
             </li>
             <li>
+              <Link to="/orders">Mi Compras</Link>
+            </li>
+            <li>
               <Link to="/profile">Mi perfil</Link>
             </li>
             

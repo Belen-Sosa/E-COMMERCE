@@ -2,8 +2,9 @@ import Order from '../models/order.model.js'
 
 
 export const getOrders = async ( req, res)=> {
+    console.log("user id: ", req.user.id)
+    const orders= await Order.find({ userId: req.user.id }).populate('items.productId', 'name images');;
 
-    const orders= await Order.find();
     res.json(orders);
 }
 

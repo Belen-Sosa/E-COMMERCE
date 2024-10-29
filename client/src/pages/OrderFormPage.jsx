@@ -7,7 +7,7 @@ import { createPreference } from "../api/mercadoPago";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 
 
-function OrderPage() {
+function OrderFormPage() {
   const publicKey = import.meta.env.VITE_PUBLIC_KEY;
 
   //inicializar mp
@@ -95,4 +95,4 @@ initMercadoPago(publicKey,{
   );
 }
 
-export default OrderPage;
+export default OrderFormPage;

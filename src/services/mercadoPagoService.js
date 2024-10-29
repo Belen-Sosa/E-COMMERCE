@@ -25,7 +25,7 @@ export const createPreference = async ( req, res)=> {
     preference.create({
         body:{
             items: itemsWithUnitPrice,  // Enviamos los items ya con 'unit_price',
-            notification_url: "https://890c-181-230-98-91.ngrok-free.app/api/webhook",
+            notification_url: "https://171a-181-230-98-91.ngrok-free.app/api/webhook",
             metadata: {
                 userId, // Agregamos el userId en la metadata
                 items,
@@ -35,7 +35,7 @@ export const createPreference = async ( req, res)=> {
 
     })
     .then((response) => {
-     
+
      res.json(response)
     })
     .catch((error) => {
@@ -63,11 +63,21 @@ export const webHook= async (req, res) =>{
 
             
             const data = await response.json();
-         
+
+            console.log("data",data.metadata)
+
+          
             try {
+                const items =  data.metadata.items.map(item => ({
+                 
+                    productId: item.product_id,
+                    quantity: item.quantity,
+                    price: item.price
+                }));
+                
                 const newOrder = new Order({
                     userId: data.metadata.user_id,
-                    items: data.metadata.items,
+                    items: items,
                     totalAmount:data.transaction_amount,
                  
                 });
@@ -99,8 +109,7 @@ export const webHook= async (req, res) =>{
 
         }
 
-        res.sendStatus(200);
-
+        res.status(200);
     } catch (error) {
         console.log('Error:',error);
         res.sendStatus(500);
