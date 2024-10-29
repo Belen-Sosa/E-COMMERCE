@@ -13,6 +13,7 @@ import orderRoutes from './routes/order.routes.js'
 import paymentRoutes from './routes/payments.routes.js'
 import cartRoutes from './routes/cart.routes.js'
 import reviewRoutes from './routes/reviews.routes.js'
+import mpRoutes from './routes/mp.routes.js'
 
 
 
@@ -54,4 +55,5 @@ app.use("/api",orderRoutes);
 app.use("/api",paymentRoutes);
 app.use("/api",cartRoutes);
 app.use("/api",reviewRoutes);
+app.use("/api",mpRoutes);
 export default app;

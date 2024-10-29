@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 
 import { CartContext } from "../context/CartContext";
-import { createOrder } from "../api/order";
+import { createPreference } from "../api/mercadoPago";
 
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 
@@ -18,9 +18,9 @@ initMercadoPago(publicKey,{
   console.log("cartData",cartData)
 
   const [preferenceId, setPreferenceId] = useState(null); // Guarda el preferenceId para usar en Wallet
-  const createPreference = async () => {
+  const creatingPreference = async () => {
     try {
-      const response = await createOrder(cartData);
+      const response = await createPreference(cartData);
 
   
 
@@ -33,7 +33,7 @@ initMercadoPago(publicKey,{
     }
   };
   const handleBuy = async ()=>{
-    const id = await createPreference();
+    const id = await creatingPreference();
     console.log("id aca en handle buyy", id)
     if(id){
       setPreferenceId(id)
