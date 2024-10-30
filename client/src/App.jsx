@@ -55,7 +55,7 @@ function App() {
 
               <Route path="/orders" element={<OrderPage/>}  />
               <Route path="/order/new" element={<OrderFormPage/>}  />
-              <Route path="/order/detail" element={<DetailOrderPage/>}  />
+              <Route path="/order/detail/:id" element={<DetailOrderPage/>}  />
               <Route path="/payment" element={<PaymentPage />}  />
             </Route>
           

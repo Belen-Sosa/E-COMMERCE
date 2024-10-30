@@ -3,10 +3,13 @@ import { config } from 'dotenv';
 import Order from '../models/order.model.js'
 import Payment from '../models/payment.model.js'
 
+import Cart from '../models/cart.model.js'
 config();
 
 // SDK de Mercado Pago
 import { MercadoPagoConfig, Preference } from 'mercadopago';
+
+
 
 // Agrega credenciales
 const client = new MercadoPagoConfig({ accessToken: process.env.ACCESS_TOKEN});
@@ -25,7 +28,7 @@ export const createPreference = async ( req, res)=> {
     preference.create({
         body:{
             items: itemsWithUnitPrice,  // Enviamos los items ya con 'unit_price',
-            notification_url: "https://171a-181-230-98-91.ngrok-free.app/api/webhook",
+            notification_url: "https://f0ba-181-230-98-91.ngrok-free.app/api/webhook",
             metadata: {
                 userId, // Agregamos el userId en la metadata
                 items,
@@ -84,7 +87,9 @@ export const webHook= async (req, res) =>{
                 
             
                 const savedOrder=  await newOrder.save();
-              
+
+                console.log("SAVED ORDER", savedOrder)
+       
                 try {
                
                    const newPayment = new Payment({
@@ -96,7 +101,23 @@ export const webHook= async (req, res) =>{
                     ,
                   })
                   const savedPayment = await newPayment.save();
-
+                  console.log("SAVED PAYMENT", savedPayment)
+                  if(savedPayment){
+                        try {
+                        console.log("userId",savedPayment.userId )
+                         let cart = await Cart.findOne( { userId:savedPayment.userId});
+                         console.log("cart:", cart)
+                         if(cart){
+                            const deleteCart= await Cart.findByIdAndDelete(cart._id);
+                            console.log("DELETE CART", deleteCart)
+                     
+                         }
+                  
+                        } catch (error) {
+                            console.log(error);
+                        }
+                      
+                  }
                
                 } catch (error) {
                     console.log(error)

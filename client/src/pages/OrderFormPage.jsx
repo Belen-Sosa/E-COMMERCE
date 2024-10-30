@@ -15,7 +15,7 @@ initMercadoPago(publicKey,{
   locale:"es-AR",
 });
   const {cartData,editItemToCart,getDataCart } = useContext(CartContext);
-  console.log("cartData",cartData)
+
 
   const [preferenceId, setPreferenceId] = useState(null); // Guarda el preferenceId para usar en Wallet
   const creatingPreference = async () => {

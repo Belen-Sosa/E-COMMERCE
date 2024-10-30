@@ -63,8 +63,7 @@ export const addItemToCart = async (req, res) => {
     const {  productId, quantity ,image} = req.body;
     console.log(req.body);
     console.log(req.user)
-    console.log('estamos aquiiiiiiiiii')
-
+  
     try {
         // Buscar el producto por su ID
         const product = await Product.findById(productId);

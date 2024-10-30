@@ -7,7 +7,7 @@ import { createOrderSchema } from "../schemas/order.schema.js";
 const router = Router();
 
 router.get('/orders',authRequired,getOrders);
-router.get('/orders/id',authRequired,getOrder);
+router.get('/orders/:id',authRequired,getOrder);
 
 
 router.delete('/orders/:id',authRequired,deleteOrder);
